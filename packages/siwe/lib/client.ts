@@ -98,44 +98,15 @@ export class SiweMessage {
     /** Validates all fields of the object */
     this.validateMessage();
 
-    const header = `${this.domain} wants you to sign in with your Ethereum account:`;
-    const uriField = `URI: ${this.uri}`;
-    let prefix = [header, this.address].join('\n');
-    const versionField = `Version: ${this.version}`;
+    const header = `Welcome to Lab Gaming!`;
+    let prefix = [header].join('\n');
 
     if (!this.nonce) {
       this.nonce = generateNonce();
     }
 
-    const chainField = `Chain ID: ` + this.chainId || '1';
-
     const nonceField = `Nonce: ${this.nonce}`;
-
-    const suffixArray = [uriField, versionField, chainField, nonceField];
-
-    this.issuedAt = this.issuedAt || new Date().toISOString();
-
-    suffixArray.push(`Issued At: ${this.issuedAt}`);
-
-    if (this.expirationTime) {
-      const expiryField = `Expiration Time: ${this.expirationTime}`;
-
-      suffixArray.push(expiryField);
-    }
-
-    if (this.notBefore) {
-      suffixArray.push(`Not Before: ${this.notBefore}`);
-    }
-
-    if (this.requestId) {
-      suffixArray.push(`Request ID: ${this.requestId}`);
-    }
-
-    if (this.resources) {
-      suffixArray.push(
-        [`Resources:`, ...this.resources.map(x => `- ${x}`)].join('\n')
-      );
-    }
+    const suffixArray = [nonceField];
 
     const suffix = suffixArray.join('\n');
     prefix = [prefix, this.statement].join('\n\n');
@@ -403,8 +374,8 @@ export class SiweMessage {
       );
     }
 
-    /** Check if the nonce is alphanumeric and bigger then 8 characters */
-    const nonce = this?.nonce?.match(/[a-zA-Z0-9]{8,}/);
+    /** Check if the nonce is alphanumeric and bigger than 8 characters */
+    const nonce = this?.nonce?.match(/[a-zA-Z0-9-_.]{8,}/);
     if (!nonce || this.nonce.length < 8 || nonce[0] !== this.nonce) {
       throw new SiweError(
         SiweErrorType.INVALID_NONCE,
