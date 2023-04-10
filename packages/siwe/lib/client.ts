@@ -105,9 +105,9 @@ export class SiweMessage {
       this.nonce = generateNonce();
     }
 
-    const nonceField = `Nonce: ${this.nonce}`;
     const domainField = `Domain: ${this.domain}`;
-    const suffixArray = [nonceField, domainField];
+    const nonceField = `Nonce: ${this.nonce}`;
+    const suffixArray = [domainField, nonceField];
 
     const suffix = suffixArray.join('\n');
     prefix = [prefix, this.statement].join('\n\n');
