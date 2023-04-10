@@ -23,5 +23,9 @@
     "typedoc": "^0.23.12",
     "typedoc-plugin-extras": "^2.2.1",
     "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "siwe": "file:packages/siwe",
+    "siwe-parser": "file:packages/siwe-parser"
   }
 }
