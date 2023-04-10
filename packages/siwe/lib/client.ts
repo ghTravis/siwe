@@ -98,7 +98,7 @@ export class SiweMessage {
     /** Validates all fields of the object */
     this.validateMessage();
 
-    const header = `Welcome to Lab Gaming!`;
+    const header = `Sign in to Lab Gaming!`
     let prefix = [header].join('\n');
 
     if (!this.nonce) {
@@ -106,7 +106,8 @@ export class SiweMessage {
     }
 
     const nonceField = `Nonce: ${this.nonce}`;
-    const suffixArray = [nonceField];
+    const domainField = `Domain: ${this.domain}`;
+    const suffixArray = [nonceField, domainField];
 
     const suffix = suffixArray.join('\n');
     prefix = [prefix, this.statement].join('\n\n');
