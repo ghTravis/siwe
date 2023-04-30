@@ -35,8 +35,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SiweMessage = void 0;
 // TODO: Figure out how to get types from this lib:
 const siwe_parser_1 = require("@spruceid/siwe-parser");
-const ethers_1 = require("ethers");
 const uri = __importStar(require("valid-url"));
+const ethersCompat_1 = require("./ethersCompat");
 const types_1 = require("./types");
 const utils_1 = require("./utils");
 class SiweMessage {
@@ -221,7 +221,7 @@ class SiweMessage {
                 /** Recover address from signature */
                 let addr;
                 try {
-                    addr = ethers_1.utils.verifyMessage(EIP4361Message, signature);
+                    addr = (0, ethersCompat_1.verifyMessage)(EIP4361Message, signature);
                 }
                 catch (e) {
                     console.error(e);
@@ -298,7 +298,7 @@ class SiweMessage {
         }
         /** EIP-55 `address` check. */
         if (!(0, siwe_parser_1.isEIP55Address)(this.address)) {
-            throw new types_1.SiweError(types_1.SiweErrorType.INVALID_ADDRESS, ethers_1.utils.getAddress(this.address), this.address);
+            throw new types_1.SiweError(types_1.SiweErrorType.INVALID_ADDRESS, (0, ethersCompat_1.getAddress)(this.address), this.address);
         }
         /** Check if the URI is valid. */
         if (!uri.isUri(this.uri)) {

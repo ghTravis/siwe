@@ -42,7 +42,7 @@ describe(`Message Generation`, () => {
     });
 });
 describe(`Message verification without suppressExceptions`, () => {
-    test.concurrent.each(Object.entries(verificationPositive))('Verificates message successfully: %s', (_, test_fields) => __awaiter(void 0, void 0, void 0, function* () {
+    test.concurrent.each(Object.entries(verificationPositive))('Verifies message successfully: %s', (_, test_fields) => __awaiter(void 0, void 0, void 0, function* () {
         const msg = new client_1.SiweMessage(test_fields);
         yield expect(msg
             .verify({
@@ -60,6 +60,7 @@ describe(`Message verification without suppressExceptions`, () => {
             const res = yield msg.validate(test_fields.signature);
             return res === data;
         }))).resolves.toBeTruthy();
+        jest.useRealTimers();
     }));
     test.concurrent.each(Object.entries(verificationNegative))('Fails to verify message: %s and rejects the promise', (n, test_fields) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -115,13 +116,19 @@ describe(`Round Trip`, () => {
     }));
 });
 describe(`EIP1271`, () => {
-    test.concurrent.each(Object.entries(EIP1271))('Verificates message successfully: %s', (_, test_fields) => __awaiter(void 0, void 0, void 0, function* () {
+    function getProviderCompat(networkId) {
+        return typeof (ethers_1.providers === null || ethers_1.providers === void 0 ? void 0 : ethers_1.providers.InfuraProvider) !== 'undefined'
+            ? new ethers_1.providers.InfuraProvider(networkId)
+            : new ethers_1.InfuraProvider(networkId);
+    }
+    test.concurrent.each(Object.entries(EIP1271))('Verifies message successfully: %s', (_, test_fields) => __awaiter(void 0, void 0, void 0, function* () {
+        const provider = getProviderCompat(1);
         const msg = new client_1.SiweMessage(test_fields.message);
         yield expect(msg
             .verify({
             signature: test_fields.signature,
         }, {
-            provider: new ethers_1.providers.CloudflareProvider(1),
+            provider,
         })
             .then(({ success }) => success)).resolves.toBeTruthy();
     }));

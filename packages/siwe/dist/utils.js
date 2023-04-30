@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkInvalidKeys = exports.isValidISO8601Date = exports.generateNonce = exports.checkContractWalletSignature = void 0;
 const random_1 = require("@stablelib/random");
 const ethers_1 = require("ethers");
+const ethersCompat_1 = require("./ethersCompat");
 const EIP1271_ABI = ["function isValidSignature(bytes32 _message, bytes _signature) public view returns (bytes4)"];
 const EIP1271_MAGICVALUE = "0x1626ba7e";
 const ISO8601 = /^(?<date>[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]))[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(.[0-9]+)?(([Zz])|([+|-]([01][0-9]|2[0-3]):[0-5][0-9]))$/;
@@ -27,8 +28,8 @@ const checkContractWalletSignature = (message, signature, provider) => __awaiter
         return false;
     }
     const walletContract = new ethers_1.Contract(message.address, EIP1271_ABI, provider);
-    const hashMessage = ethers_1.utils.hashMessage(message.prepareMessage());
-    const res = yield walletContract.isValidSignature(hashMessage, signature);
+    const hashedMessage = (0, ethersCompat_1.hashMessage)(message.prepareMessage());
+    const res = yield walletContract.isValidSignature(hashedMessage, signature);
     return res == EIP1271_MAGICVALUE;
 });
 exports.checkContractWalletSignature = checkContractWalletSignature;
